@@ -1,0 +1,14 @@
+# Ignore everything
+*
+*/**
+
+# Don't ignore directories, so we recurse into them
+!*/
+
+# Don't ignore these file types
+!*.py
+!*.json
+!*.yaml
+
+# Don't ignore .gitignore itself
+!.gitignore
