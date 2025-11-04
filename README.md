@@ -388,15 +388,6 @@ python main.py evaluate \
 ### IMPORTANT: The paper is currently under review, and the trained model will be released once a decision has been made.
 If you use this code in your research, please cite:
 
-```bibtex
-@software{fisheye_rectification,
-  title={DeFishNet: Deformable Fisheye Rectification Network with
-Cascaded Adaptive Correction},
-  author={M. Amin Manouchehrpour,  Shahram Shirani},
-  year={2024},
-  url={https://github.com/yourusername/fisheye-rectification}
-}
-```
 
 ## Contact
 
