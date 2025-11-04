@@ -1,0 +1,51 @@
+# Fisheye Rectification Model Configuration
+
+model:
+  initial_channels: 128
+  num_blocks: 5
+  growth_rate: 2
+  image_size: 256
+  num_skip_connections: 4
+  model_type: 'cascaded'  # Options: 'cascaded' or 'enhanced'
+  
+  # Checkpoint loading parameters
+  load_checkpoint: false
+  checkpoint_path: null
+  reset_optimizer: false
+
+training:
+  batch_size: 15
+  learning_rate: 0.0003
+  num_epochs: 500
+  start_epoch: 0
+  
+  # Training monitoring
+  plot_interval: 655
+  validation_split: 0.02
+  
+  # Learning rate scheduling
+  scheduler_step_size: 5
+  scheduler_gamma: 0.9
+  
+  # Early stopping
+  early_stopping_patience: 100
+
+loss:
+  # Loss component weights
+  perceptual_weight: 0.7
+  content_weight: 1.0
+  ssim_weight: 0.3
+  grad_weight: 0.4
+  color_weight: 0.4
+
+paths:
+  # Checkpoint and results directories
+  checkpoint_dir: './checkpoints'
+  results_dir: './results'
+  
+  # Dataset paths
+  data_dir: './data'
+  train_fisheye_dir: './data/train/fisheye'
+  train_rectified_dir: './data/train/rectified'
+  val_fisheye_dir: './data/val/fisheye'
+  val_rectified_dir: './data/val/rectified'
