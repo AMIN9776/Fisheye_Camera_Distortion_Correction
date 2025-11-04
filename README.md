@@ -14,12 +14,6 @@ A deep learning approach for rectifying fisheye camera distortion using cascaded
 - [Inference](#inference)
 - [Model Architectures](#model-architectures)
 - [Configuration](#configuration)
-- [Evaluation Metrics](#evaluation-metrics)
-- [Results](#results)
-- [Technical Details](#technical-details)
-- [Troubleshooting](#troubleshooting)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Overview
 
@@ -117,8 +111,6 @@ python -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')"
 │   │   ├── metrics.py         # Evaluation metrics
 │   │   └── helpers.py         # General utilities
 │   ├── main.py                # Main entry point
-│   ├── train_simple.py        # Simple training script
-│   ├── train_example.py       # Example training script
 │   └── inference.py           # Inference script
 ├── PreProcess/                # Data preprocessing tools
 │   ├── Adding_distortion.py   # Synthetic fisheye generation
@@ -210,20 +202,7 @@ Creates train/validation splits while maintaining paired relationships.
 
 ## Training
 
-### Quick Start
-
-#### Option 1: Simple Training (Beginners)
-
-```bash
-python train_simple.py
-```
-
-Modify constants in the script for basic configuration:
-- `BATCH_SIZE`: Training batch size (default: 4)
-- `IMAGE_SIZE`: Image dimensions (default: 256)
-- `NUM_EPOCHS`: Training epochs (default: 100)
-
-#### Option 2: Standard Training
+#### Standard Training
 
 ```bash
 python train_example.py \
@@ -232,17 +211,6 @@ python train_example.py \
     --batch_size 8 \
     --model cascaded \
     --lr 0.001
-```
-
-#### Option 3: Advanced Training
-
-```bash
-python main.py train \
-    --config config/config.yaml \
-    --experiment_name fisheye_experiment \
-    --epochs 300 \
-    --tensorboard \
-    --backup_code
 ```
 
 ### Training Arguments
@@ -395,39 +363,6 @@ paths:
   val_rectified_dir: './data/val/rectified'
 ```
 
-### Loss Function Weights
-
-Adjust weights to emphasize different aspects:
-
-| Weight | Purpose | Recommended Range |
-|--------|---------|-------------------|
-| `perceptual_weight` | Overall visual quality | 0.5 - 1.0 |
-| `content_weight` | Pixel-level accuracy | 0.8 - 1.2 |
-| `ssim_weight` | Structural preservation | 0.1 - 0.3 |
-| `grad_weight` | Edge sharpness | 0.2 - 0.5 |
-| `color_weight` | Color fidelity | 0.3 - 0.5 |
-
-## Evaluation Metrics
-
-The system computes multiple metrics for comprehensive evaluation:
-
-### Image Quality Metrics
-
-1. **PSNR (Peak Signal-to-Noise Ratio)**
-   - Measures pixel-level reconstruction quality
-   - Higher is better (typical range: 25-40 dB)
-
-2. **SSIM (Structural Similarity Index)**
-   - Measures structural preservation
-   - Range: 0-1 (higher is better)
-
-3. **LPIPS (Learned Perceptual Image Patch Similarity)**
-   - Perceptual distance using deep features
-   - Lower is better
-
-4. **FID (Fréchet Inception Distance)**
-   - Measures distribution similarity
-   - Lower is better
 
 ### Running Evaluation
 
@@ -440,138 +375,6 @@ python main.py evaluate \
     --save_visualizations
 ```
 
-## Results
-
-### Expected Performance
-
-| Model | PSNR | SSIM | LPIPS | FID | Training Time |
-|-------|------|------|-------|-----|---------------|
-| Cascaded | 31.32 dB | 0.91 | 0.044 | 13.69 | ~4 hours |
-| Enhanced | 32.79 dB | 0.90 | 0.052 | 25.28 | ~6 hours |
-
-*Results on validation set with 256x256 images, trained for 200 epochs on NVIDIA RTX 3090*
-
-### Sample Results
-
-The model successfully corrects various types of fisheye distortions:
-- Barrel distortion
-- Pincushion effects
-- Complex radial distortions
-- Color aberrations
-
-## Technical Details
-
-### Deformable Convolution Implementation
-
-The deformable convolution learns offsets and modulation masks:
-
-```python
-offset = self.offset_conv(x)           # 2D offsets for each kernel position
-modulator = 2 * sigmoid(self.modulator_conv(x))  # Importance weights
-output = deform_conv2d(x, offset, weight, mask=modulator)
-```
-
-### Color-Aware Attention Mechanism
-
-Special attention to green channel (important for Bayer pattern sensors):
-
-```python
-green_attention = self.green_attention(x)
-other_attention = self.other_attention(x)
-# Boost middle channels by 20%
-attention[:, mid_channels, :, :] *= 1.2
-final_attention = (green_attention * attention + other_attention) / 2
-```
-
-### Polynomial Distortion Model
-
-Synthetic fisheye generation uses a 4-term polynomial:
-
-```python
-r_distorted = k1*r + k2*r^3 + k3*r^5 + k4*r^7
-```
-
-Where:
-- `r`: Original radius from image center
-- `k1, k2, k3, k4`: Distortion coefficients
-- `r_distorted`: Distorted radius
-
-## Troubleshooting
-
-### Common Issues and Solutions
-
-#### Out of Memory Error
-
-**Problem**: CUDA out of memory during training
-
-**Solutions**:
-- Reduce batch size: `--batch_size 2`
-- Reduce image size: `--image_size 128`
-- Use gradient accumulation
-- Switch to cascaded model (uses less memory)
-
-#### Slow Training
-
-**Problem**: Training is taking too long
-
-**Solutions**:
-- Verify GPU usage: `nvidia-smi`
-- Enable mixed precision training
-- Reduce validation frequency
-- Use cascaded model for faster training
-
-#### Poor Convergence
-
-**Problem**: Loss not decreasing or unstable
-
-**Solutions**:
-- Reduce learning rate: `--lr 0.0001`
-- Check data normalization
-- Verify paired images are correctly matched
-- Increase batch size for more stable gradients
-
-#### Black Borders in Output
-
-**Problem**: Rectified images have black borders
-
-**Solutions**:
-- Preprocess with `AddPadding.py`
-- Adjust padding parameters in preprocessing
-- Check input image quality
-
-### System Requirements
-
-**Minimum Requirements**:
-- 8GB RAM
-- 4GB GPU memory
-- 50GB disk space
-
-**Recommended Requirements**:
-- 16GB RAM
-- 8GB+ GPU memory (RTX 3070 or better)
-- 100GB disk space
-- CUDA 11.0+
-
-## Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/improvement`)
-3. Commit your changes (`git commit -am 'Add new feature'`)
-4. Push to the branch (`git push origin feature/improvement`)
-5. Create a Pull Request
-
-### Code Style
-
-- Follow PEP 8 guidelines
-- Add type hints for function parameters
-- Include docstrings for all classes and functions
-- Write unit tests for new features
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Acknowledgments
 
@@ -581,18 +384,10 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Dataset augmentation inspired by standard fisheye correction literature
 
 ## Citation
-
+### IMPORTANT: The paper is currently under review, and the trained model will be released once a decision has been made.
 If you use this code in your research, please cite:
 
-```bibtex
-@software{fisheye_rectification,
-  title={Fisheye Camera Distortion Correction},
-  author={Your Name},
-  year={2024},
-  url={https://github.com/yourusername/fisheye-rectification}
-}
-```
 
 ## Contact
 
-For questions or support, please open an issue on GitHub or contact [your-email@example.com]
+For questions or support, please open an issue on GitHub or contact [manouchm@mcmaster.ca]
