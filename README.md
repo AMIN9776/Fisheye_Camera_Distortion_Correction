@@ -14,7 +14,6 @@ A deep learning approach for rectifying fisheye camera distortion using cascaded
 - [Inference](#inference)
 - [Model Architectures](#model-architectures)
 - [Configuration](#configuration)
-- [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
 
 ## Overview
