@@ -390,7 +390,7 @@ python main.py evaluate \
 - Dataset augmentation inspired by standard fisheye correction literature
 
 ## Citation
-
+###IMPORTANT: The paper is currently under review, and the trained model will be released once a decision has been made.
 If you use this code in your research, please cite:
 
 ```bibtex
