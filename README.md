@@ -17,7 +17,7 @@ A deep learning approach for rectifying fisheye camera distortion using cascaded
 
 ## Overview
 
-This project implements a state-of-the-art deep learning solution for correcting geometric distortions in fisheye camera images. The system uses advanced neural network architectures combining deformable convolutions, attention mechanisms, and multi-scale processing to achieve high-quality rectification while preserving image details and color fidelity.
+Fisheye lens distortion can significantly degrade image quality and hinder the performance of computer vision systems. In this paper, we propose a cascade multi-stage deep learning-based fisheye image rectification architecture, which incrementally rectifies fisheye images. The architecture begins by predicting a dense distortion map to perform pixel-wise rectification explicitly modeling the underlying geometric warping. 
 
 ### Key Innovations
 
