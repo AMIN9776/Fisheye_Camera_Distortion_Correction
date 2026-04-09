@@ -160,6 +160,8 @@ r_distorted = k1*r + k2*r^3 + k3*r^5 + k4*r^7
 
 #### 2. Handle Black Borders
 <img src="https://raw.githubusercontent.com/AMIN9776/Fisheye_Camera_Distortion_Correction/main/padding_arch.png" width="500">>
+
+
 Remove or pad black borders in fisheye images:
 
 ```bash
