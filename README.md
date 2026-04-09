@@ -159,9 +159,9 @@ r_distorted = k1*r + k2*r^3 + k3*r^5 + k4*r^7
 ```
 
 #### 2. Handle Black Borders
-<p align="center">
-  <img src="[path/to/image.png](https://github.com/user-attachments/assets/f3128bc7-2fb5-416c-bbc4-5ed2ab7e13c4)" alt="Centered Image">
-</p>
+
+![3padding_new_small](https://github.com/user-attachments/assets/9dd71fef-32f5-4cf5-b94f-3925f694b173)
+
 
 Remove or pad black borders in fisheye images:
 
