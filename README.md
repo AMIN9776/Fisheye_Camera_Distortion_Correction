@@ -159,6 +159,8 @@ r_distorted = k1*r + k2*r^3 + k3*r^5 + k4*r^7
 ```
 
 #### 2. Handle Black Borders
+![3padding_new_small](https://github.com/user-attachments/assets/f3128bc7-2fb5-416c-bbc4-5ed2ab7e13c4)
+
 
 Remove or pad black borders in fisheye images:
 
